@@ -1,0 +1,35 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "sazzad",
+  "license": "ISC",
+  "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "async": "^3.2.4",
+    "auth-service": "^1.0.0",
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
+    "docx-extractor": "^1.1.5",
+    "docxtemplater": "^3.34.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "handlebars": "^4.7.7",
+    "jsonwebtoken": "^9.0.0",
+    "mammoth": "^1.5.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.21",
+    "office-converter": "^1.0.2",
+    "officeparser": "^3.1.4",
+    "otp-generator": "^4.0.1",
+    "socket.io": "^4.6.1"
+  }
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title><%= notification.title %></title>
+    <style>
+      #email-container {
+        display: none;
+      }
+      #email-container.show {
+        display: block;
+      }
+
+      #deny-container {
+        display: none;
+      }
+      #deny-container.show {
+        display: block;
+      }
+      .btn-container{
+      margin: 0 5px;
+      display: flex;
+      justify-content: center;
+     }
+     
+    .btn-container button {
+      margin: 0 200px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+     .btn-deny {
+      background-color: #FF5A5A;
+      color: white;
+      border: none;
+      margin-right: 300px;
+    }
+
+    .btn-deny:hover {
+      background-color: #E63737;
+    }
+
+    .btn-approve {
+      background-color: #3ABD4E;
+      color: white;
+      border: none;
+    }
+
+    .btn-approve:hover {
+      background-color: #2C8E3D;
+    color: white;
+    }
+    </style>
+  </head>
+
+
+<body>
+  </br>
+    <h1 style="display: flex;justify-content: center;"><%= notification.title %></h1></br>
+    <p style="text-align: center; "><PRE style="text-align: center;"><%= notification.body%></PRE></p>
+      </br></br>
+      </br></br>
+
+      <div class="btn-container">
+     
+        <input type="hidden" name="notificationId" value="<%= notification.id %>">
+        <!-- <button type="button" class="btn-approve" onclick="registerForm()">Register</button> -->
+        <a href="/PECHome/<%= email %>/RegistrationForm">Register</a>
+
+    
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+     
+
+      <script>
+        
+      </script>
+
+
+  </body>
+</html>
+
+
+
+<!-- 
+<div>
+  <button type="button" style="margin-left: 380px;" class="btn btn-primary">Deny</button>
+  <button type="button" style="margin-left: 440px;" class="btn btn-primary">Approve and send</button>
+</div> -->
