@@ -39,7 +39,7 @@ const ExecutiveHeader = () => {
         <Container>
           <Navbar.Brand href="/">Executive Dashboard</Navbar.Brand>
           <Nav>
-            <NavDropdown title="Profile" id="basic-nav-dropdown">
+            <NavDropdown title="Profile" id="basic-nav-dropdown" className='rounded dropdown-hover'>
             <NavDropdown.Item as={Link} to={`/Home/${email}/DeleteProfile`}  onClick={() => handleDeleteProfile(email)}>Delete Profile</NavDropdown.Item>
             <NavDropdown.Item as={Link} to={`/Home/${email}/LogOut`}>Log out</NavDropdown.Item>
             </NavDropdown>
@@ -148,10 +148,11 @@ const ExecutiveHeader = () => {
 
 </div> */}
 
-<div className="d-flex">
+<div className="d-flex body">
+  
   <div className="sidebar">
     <Nav className="flex-column dropdown-menu rounded vh-100" style = {{backgroundColor: '#0A4770'}}>
-      <NavDropdown title="Create Notice" id="basic-nav-dropdown" className='rounded dropdown-hover' style = {{backgroundColor: '#12966F'}}>
+      <NavDropdown title="Create Notice" id="basic-nav-dropdown" className='rounded dropdown-hover ml-auto'>
         {/* <NavDropdown.Item href="/Home/`${email}`/EventNotice">Event notice</NavDropdown.Item> */}
 
         <NavDropdown.Item as={Link} to={`/Home/${email}/EventNotice`}>Event notice</NavDropdown.Item>
@@ -160,7 +161,7 @@ const ExecutiveHeader = () => {
         <NavDropdown.Item as={Link} to={`/Home/${email}/TeamlistNotice`}>Teamlist notice</NavDropdown.Item>
 
       </NavDropdown>
-      <NavDropdown title="Forward Notice" id="basic-nav-dropdown" className='rounded dropdown-hover' style = {{backgroundColor: '#12966F'}}>
+      <NavDropdown title="Forward Notice" id="basic-nav-dropdown" className='rounded dropdown-hover'>
         <DropdownSubmenu href="#action/3.7" title="Event notice">
           {/* <NavDropdown.Item href="/Home/:email/ForwardEventNotice">Forward</NavDropdown.Item>
           <NavDropdown.Item href="/Home/:email/PostEventNotice">Post</NavDropdown.Item> */}
@@ -174,7 +175,7 @@ const ExecutiveHeader = () => {
 
         </DropdownSubmenu>
       </NavDropdown>
-      <NavDropdown title="Fixturing" id="basic-nav-dropdown" className='rounded dropdown-hover' style = {{backgroundColor: '#12966F'}}>
+      <NavDropdown title="Fixturing" id="basic-nav-dropdown" className='rounded dropdown-hover'>
         {/* <NavDropdown.Item href="/Home/:email/GroupStage">Group stage</NavDropdown.Item>
         <NavDropdown.Item href="/Home/:email/KnockOut">Knock out</NavDropdown.Item> */}
 
@@ -182,9 +183,9 @@ const ExecutiveHeader = () => {
         <NavDropdown.Item as={Link} to={`/Home/${email}/KnockOut`}>Knock out</NavDropdown.Item>
 
       </NavDropdown>
-      <Nav.Link as={Link} to={`/Home/${email}/Verification`}> Player verification</Nav.Link>
-      <Nav.Link as={Link} to={`/Home/${email}/ExecutiveNotification`}> Notification</Nav.Link>
-      <Nav.Link as={Link} to={`/Home/${email}/UpdateResults`}> Update results</Nav.Link>
+      <Nav.Link as={Link} to={`/Home/${email}/Verification`} className='rounded' style = {{color :'white'}}> Player verification</Nav.Link>
+      <Nav.Link as={Link} to={`/Home/${email}/ExecutiveNotification`} className='rounded' style = {{color :'white'}}> Notification</Nav.Link>
+      <Nav.Link as={Link} to={`/Home/${email}/UpdateResults`} className='rounded' style = {{color :'white'}}> Update results</Nav.Link>
 
 
     </Nav>

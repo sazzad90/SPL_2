@@ -4,6 +4,8 @@ import Form from 'react-bootstrap/Form';
 import Axios from 'axios'
 import './EventNotice.css'
 import ViewTeamlistNotice from './ViewTeamlistNotice';
+import './header.css'; // Import the CSS file
+
 
 const TeamlistNotice =()=> {
 
@@ -66,8 +68,8 @@ const addData = (data) => {
     <div className='half-width container mt-3 d-flex justify-content-center'>
                 <section>
                     <div className='left_side mt-3'>
-                        <h3 className='col-lg-12'>Team List Notice</h3><br />
-                        <Form>
+                        {/* <h3 className='col-lg-12'>Team List Notice</h3><br /> */}
+                        {/* <Form>
                         <Form.Group className="mb-3 col-lg-12" controlId="formBasicName">
                             <label htmlFor="dropdown">Event name</label><br/>
                                 <select id="dropdown" name='name'  onChange={getData}>
@@ -87,7 +89,35 @@ const addData = (data) => {
                             <Button variant="primary" className='col-lg-6' onClick={addData} type="submit">
                                 Submit
                             </Button>
-                        </Form>
+                        </Form> */}
+
+                        <div className='left_side mt-5 w-100' style={{ backgroundColor: '#0A4770', padding: '20px', borderRadius: '10px' }}>
+                             <h3 className='col-lg-12' style={{ color: 'white', marginBottom: '20px' }}>Team List Notice</h3>
+                            <Form className="animated-form">
+                            <Form.Group className="mb-3 col-lg-12" controlId="formBasicName">
+                                <label htmlFor="dropdown" className='text-light'>Event name</label>
+                                <br />
+                                <select id="dropdown" name="name" onChange={getData} className="form-select" style={{ backgroundColor: '#F7FFCF', transition: 'all 0.3s' }}>
+                                <option value="">Choose an event name</option>
+                                <option value="Football">Football</option>
+                                <option value="Cricket">Cricket</option>
+                                <option value="Basketball">Basketball</option>
+                                <option value="Volleyball">Volleyball</option>
+                                </select>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3 col-lg-12" controlId="formBasicEmail">
+                                <Form.Label className='text-light'>Deadline</Form.Label>
+                                <Form.Control type="date" name="deadline" style={{ backgroundColor: '#F7FFCF', transition: 'all 0.3s' }} onChange={getData} placeholder="Enter deadline date for team list submission" className="hover-effect" />
+                            </Form.Group>
+
+                            <Button variant="primary" className="col-lg-6" onClick={addData} type="submit">
+                                Submit
+                            </Button>
+                            </Form>
+                        </div>
+
+
                     </div>
                     
                 </section>

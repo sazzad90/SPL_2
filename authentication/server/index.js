@@ -1226,7 +1226,7 @@ app.get('/data', (req, res) => {
                 const match = {
                   team1: teams.shift(),
                   team2: teams.pop(),
-                  date: new Date(currentDate),
+                  date: new Date(currentDate).toLocaleString('en-US', {weekday: 'short', month: 'short', day: '2-digit', year: '2-digit'}),
                   time: matchTime
                 };
                 matches.push(match);
@@ -1852,23 +1852,54 @@ app.post('/advisorDeleteProfile/:email', (req, res) => {
 //update results
 
 app.get('/updateResults', (req, res) => {
-  const currentDate = new Date();
-const dateString = currentDate.toISOString().slice(0, 10);
-console.log(dateString);
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: '2-digit',
+  });
 
-const time = '06:0';
-const dateTime = dateString + ' ' + time;
-
-console.log('formatted: ',dateTime)
+console.log('formatted: ',currentDate);
+const dateTime = 'Sun, May 28, 23';
   db.query('SELECT * FROM fixture where time=? ',[dateTime], (err, results) => {
     if (err) {
       console.error(err);
       res.status(500).json({ message: 'Internal server error' });
     } else {
-        console.log('db : ',results[0].time);
+        console.log('db : ',results);
 
         // res.send(results);
-        res.send('ok')
+        res.send(results)
     }
   })
+})
+
+
+app.post('/updateResults', (req, res) => {
+  const dataObject = req.body.dataObject;
+  console.log(dataObject.undefined)
+
+  const dataArray = dataObject.undefined;
+
+// Iterate over the array and access individual objects
+  dataArray.forEach((data) => {
+  const { team1, team2, score1, score2 } = data;
+  console.log(`${team1} vs ${team2}: ${score1}-${score2}`);
+  const firstTeam = `${team1} `;
+  const secondTeam = `${team2} `;
+  const s1 = `${score1}`;
+  const s2 = `${score2}`;
+
+
+  db.query("INSERT into fixture(Employee_id,Name, Email, Password, userID,dep_id,userType) values(?,?,?,?,?,?,?)",
+        [employeeID,name,email, hashedPassword, userID,dept_id,userType], (err, result2) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result2);
+            }
+        });
+
+
+});
 })

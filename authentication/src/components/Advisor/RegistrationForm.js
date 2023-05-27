@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
 
-const registrationForm = ()=> {
+const RegistrationForm = ()=> {
     const {email} = useParams();
 
   return (
@@ -9,4 +9,4 @@ const registrationForm = ()=> {
   )
 }
 
-export default registrationForm
+export default RegistrationForm
