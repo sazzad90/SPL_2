@@ -107,7 +107,7 @@ const addData = (data) => {
                             </Form.Group>
 
                             <Form.Group className="mb-3 col-lg-12" controlId="formBasicEmail">
-                                <Form.Label className='text-light'>Deadline</Form.Label>
+                                <Form.Label className='text-light'>Team submission deadline</Form.Label>
                                 <Form.Control type="date" name="deadline" style={{ backgroundColor: '#F7FFCF', transition: 'all 0.3s' }} onChange={getData} placeholder="Enter deadline date for team list submission" className="hover-effect" />
                             </Form.Group>
 

@@ -33,13 +33,13 @@ const GroupStage =()=>{
 
   const addData = (data) => {
     data.preventDefault();
-     const {eventName, startingDate,groupNumber} = fvalue;
+     const {eventName,groupNumber} = fvalue;
 
    // console.log(name, date);
 
     Axios.post("http://localhost:5050/fixtureInfo",{
         eventName:eventName,
-        startingDate:startingDate,
+        // startingDate:startingDate,
         groupNumber:groupNumber,
     }).then((response)=>{
         if(response){
@@ -75,10 +75,10 @@ const GroupStage =()=>{
                                 </select>
                                 </Form.Group>
 
-                 <Form.Group className="mb-3 col-lg-12" controlId="formBasicEmail">
+                 {/* <Form.Group className="mb-3 col-lg-12" controlId="formBasicEmail">
                     <Form.Label>Starting date</Form.Label>
                      <Form.Control type="date" name='startingDate' onChange={getData} placeholder="Enter starting date of the event" />
-                 </Form.Group>
+                 </Form.Group> */}
                  
                  <Form.Group className="mb-3 col-lg-12" controlId="formBasicName">
                      <Form.Label>Number of Groups</Form.Label>

@@ -16,6 +16,7 @@ const ejs = require('ejs');
 const path = require('path');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const async = require('async');
 
 const app = express();
 
@@ -927,12 +928,12 @@ app.post('/teamlistNoticeSubmit', (req, res) =>{
         
 //         });
 
-const async = require('async');
 
 let publicEventID;
 app.post('/fixtureInfo', (req, res) => {
-  const startDate = req.body.startingDate;
-  const startingDate = new Date(startDate);
+  // const startDate = req.body.startingDate;
+  // const startingDate = new Date(startDate);
+
   const eventName = req.body.eventName;
   const current = new Date();
   const year = current.getFullYear().toString();
@@ -941,6 +942,14 @@ app.post('/fixtureInfo', (req, res) => {
   let data1 = [];
   let eventID; // Define the eventID variable
 
+  db.query("SELECT * FROM events WHERE name = ? and year = ?", [eventName, year], (err1, result1) => {
+    if (err1) {
+      console.log(err1);
+      res.status(500).send('Error retrieving teams data.');
+    }else{
+      eventID = result1[0].event_id;
+      publicEventID = eventID;
+      const startingDate = result1[0].starting_date;
   db.query("SELECT dep_id FROM teams WHERE event_name = ? && year = ?", [eventName, year], (err, result) => {
     if (err) {
       console.log(err);
@@ -948,13 +957,14 @@ app.post('/fixtureInfo', (req, res) => {
       return;
     }
 
+
     const depIdPromises = result.map(dept => {
       return new Promise((resolve, reject) => {
-        db.query("SELECT dep_code FROM department WHERE dep_id = ?", [dept.dep_id], (err1, result1) => {
-          if (err1) {
-            reject(err1);
+        db.query("SELECT dep_code FROM department WHERE dep_id = ?", [dept.dep_id], (err2, result2) => {
+          if (err2) {
+            reject(err2);
           } else {
-            resolve(result1[0].dep_code.toString());
+            resolve(result2[0].dep_code.toString());
           }
         });
       });
@@ -1102,15 +1112,12 @@ app.post('/fixtureInfo', (req, res) => {
           }
         };
 
-        db.query("SELECT * FROM events WHERE name = ? && year = ?", [eventName, year], (err, result) => {
-          if (err) {
-            console.log(err);
-            res.status(500).send('Error retrieving event ID.');
-            return;
-          }
-
-          eventID = result[0].event_id;
-          publicEventID = eventID;
+        // db.query("SELECT * FROM events WHERE name = ? && year = ?", [eventName, year], (err, result) => {
+        //   if (err) {
+        //     console.log(err);
+        //     res.status(500).send('Error retrieving event ID.');
+        //     return;
+        //   }
 
           matches.forEach(match => {
             const { homeTeam, awayTeam, date, time } = match;
@@ -1124,12 +1131,15 @@ app.post('/fixtureInfo', (req, res) => {
           });
         });
       })
-      .catch(err => {
-        console.log(err);
-        res.status(500).send('Error retrieving department codes.');
-      });
-  });
-});
+      // .catch(err => {
+      //   console.log(err);
+      //   res.status(500).send('Error retrieving department codes.');
+      // });
+    }
+  })
+})
+
+
 
 
         
@@ -1578,26 +1588,87 @@ app.get('/pecnotification/:id', (req, res) => {
 let insertid = 0;
 let title,body,notification;
 
-app.post('/denyEventNotice', (req, res) =>{
+app.post('/denyEventNotice/:id', async(req, res) =>{
+    const eventName = req.body.eventName;
+    const nid = req.params;
     insertid++;
-    title = 'Event Notice Issue';
+    console.log('e: ',nid);
+    title = 'Event Notice Issue: '+eventName;
     body = 'Your submitted event notice has some issues. Please contact with the PEC head as soon as possible to resolve the problem. Thank you'
     notification = [{ id: insertid, title, body }];
-    res.send('Event notice is sent back to executive for review.');
+
+
+    db.query('DELETE FROM notification WHERE id = ?', [nid], (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+      }else{
+        console.log(results);
+
+    db.query('select employee_id from userdb where UserType = ? and dep_id = ?',["executive",2], (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+      } else{
+        console.log(result);
+          const employeeId = result[0].employee_id;
+          // console.log('dep_id: ' + depId);
+        db.query('INSERT INTO notification (title, body,receiver_id) VALUES (?, ?,?)',  [title,body,employeeId], (err1, result1) => {
+          if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error' });
+          } else {
+            console.log("approved");
+              
+          }
+        });
+      }
+    }) 
+  }
+})
+    res.send('ok');
 })
 
-app.get('/exenotifications', (req, res) => {
-        res.json(notification);      
+app.get('/exenotifications/:email', (req, res) => {
+  const {email} = req.params;
+  console.log('email: ',email);
+  db.query('SELECT * FROM employee where email = ? ',[email], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    } else {
+      const employeeID = results[0].employee_id;
+      console.log("employeeID: " + employeeID);
+  db.query('SELECT * FROM notification where receiver_id = ? ORDER BY created_at DESC',[employeeID], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    } else {
+      res.json(result);
+    } 
+  });
+
+}
+});
     });
 
 
   app.get('/executiveNotification/:id', (req, res) => {
-    //const { id } = req.params;
+    const { id } = req.params
 
-    const notification1 = notification[0]
-        res.render('ExecutiveNotification', { notification1 });
+    const sql = 'SELECT * FROM notification WHERE id = ?';
+    db.query(sql, [id], (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+      } else if (results.length === 0) {
+        res.status(404).json({ message: 'Notification not found' });
+      } else {
+        const notification = results[0];
+        res.json(notification);
       }
-    );
+    });
+      });
 
 
  //executive notification ends
@@ -1616,6 +1687,89 @@ app.use(bodyParser.json());
 
 
 app.post('/approveAllEventNotice', (req, res) => {
+  const id  = req.body.id;
+  console.log('id: ',id)
+  const userType = 'head';
+
+db.query('select * from notification where id = ?',[id], (err2, result2) => {
+    if (err2) {
+      console.error(err2);
+      res.status(500).json({ message: 'Internal server error' });
+    } else{
+      const title = result2[0].title;
+      const body = result2[0].body;
+      console.log(title, body);
+
+db.query('select employee_id from userdb where UserType = ?',[userType], (err, result) => {
+  if (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  } else{
+    console.log(result);
+    result.forEach((row) => {
+      const employeeId = row.employee_id;
+      // console.log('dep_id: ' + depId);
+    db.query('INSERT INTO notification (title, body,receiver_id) VALUES (?, ?,?)',  [title,body,employeeId], (err1, result1) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+      } else {
+        console.log("approved");
+      }
+    });
+  });
+  }
+}) 
+res.send('ok')
+
+    }
+  })
+
+});
+
+
+app.post('/approveNorthEventNotice', (req, res) => {
+  const id  = req.body.id;
+  console.log('id: ',id);
+  const userType = 'head';
+
+db.query('select * from notification where id = ?',[id], (err2, result2) => {
+    if (err2) {
+      console.error(err2);
+      res.status(500).json({ message: 'Internal server error' });
+    } else{
+      const title = result2[0].title;
+      const body = result2[0].body;
+      console.log(title, body);
+
+db.query('select * from userdb where UserType = ?',[userType], (err, result) => {
+  if (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  } else{
+    console.log(result);
+    result.forEach((row) => {
+      const employeeId = row.employee_id;
+      // console.log('dep_id: ' + depId);
+    db.query('INSERT INTO notification (title, body,receiver_id) VALUES (?, ?,?)',  [title,body,employeeId], (err1, result1) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+      } else {
+        console.log("approved");
+      }
+    });
+  });
+  }
+}) 
+res.send('ok')
+
+    }
+  })
+
+});
+
+app.post('/approveSouthEventNotice', (req, res) => {
   const id  = req.body.id;
   console.log('id: ',id)
   const userType = 'head';
@@ -1697,6 +1851,22 @@ app.get('/deptHeadNotification/:id', (req, res) => {
     }
   });
 });
+
+//deny by dept head
+
+app.post('/denyByDeptHead/:id', (req, res) => {
+  const { id } = req.params
+
+  const sql = 'DELETE FROM notification WHERE id = ?';
+  db.query(sql, [id], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    }else{
+        res.send('deleted successfully')
+    }
+  })
+})
 
 //dept head notification ends
 
@@ -1872,28 +2042,6 @@ console.log('formatted: ',currentDate);
   })
 })
 
-
-// app.post('/updateResults', (req, res) => {
-//   const matches = req.body.matches;
-//   console.log(matches)
-
-//   matches.forEach((data) => {
-//   const { fixtureID,score1, score2,winner } = data;
-//   console.log('fixtureID:',fixtureID);
-//   console.log('winner:',winner);
-
-//   db.query("update  fixture set score1 = ?  ,score2 = ? ,winner = ? where fixtureID = ? ",[score1,score2,winner,fixtureID], (err, result2) => {
-//             if (err) {
-//                 console.log(err);
-//             } else {
-//                 res.send(result2);
-//             }
-//         });
-
-
-// });
-// })
-
 app.post('/updateResults', async (req, res) => {
   const matches = req.body.matches;
   console.log(matches);
@@ -1991,6 +2139,12 @@ app.post('/teamlistInfo/:eventName/:email', async (req, res) => {
       const dep_id = result[0].dep_id;
       console.log("dep_id: " + dep_id);
 
+      db.query('SELECT * FROM department where dep_id = ? ',[dep_id], (err4, result4) => {
+        if (err4) {
+          console.error(err4);
+          res.status(500).json({ message: 'Internal server error' });
+        } else {
+          const dep_name = result4[0].dep_name;
       const entries = Object.entries(playerlist)
       for (const [key, value] of entries) {
         if (key.startsWith('playerName')) {
@@ -1998,8 +2152,8 @@ app.post('/teamlistInfo/:eventName/:email', async (req, res) => {
           const playerName = value;
           const registrationNumber = playerlist[`registrationNumber${index}`];
 
-          let session;
-          let hall;
+          let session = null;
+          let hall = null;
 
           db.query('SELECT * FROM students where reg_no = ? ',[registrationNumber], (err1, result1) => {
 
@@ -2007,21 +2161,20 @@ app.post('/teamlistInfo/:eventName/:email', async (req, res) => {
                 console.error(err);
                 res.status(500).json({ message: 'Internal server error' });
               } else {
-                session = result1[0].session;
-                hall = result1[0].hall;
+                if(result1[0]){
+                  session = result1[0].session;
+                  hall = result1[0].hall;
+                }
+          
+                
 
                 console.log("session: " + session);
 
-
-                // for (const [key, value] of entries) {
-                //   if (key.startsWith('playerName')) {
-                //     const index = key.substring(10); // Extract the index from the key
-                //     const playerName = value;
-                //     const registrationNumber = playerlist[`registrationNumber${index}`];
-              
+                const currentDate = new Date();
+                const currentYear = currentDate.getFullYear().toString();
                     // Perform the database insertion
-                    db.query('INSERT INTO players (name, event_name, dep_id, reg_no, session, hall) VALUES (?, ?, ?, ?, ?, ?)',
-                      [playerName, eventName, dep_id, registrationNumber,session, hall ],
+                    db.query('INSERT INTO players (name, event_name, dep_name, reg_no, session, hall, event_year) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                      [playerName, eventName, dep_name, registrationNumber,session, hall,currentYear ],
                       (err3, result3) => {
                         if (err3) {
                           console.log(err);
@@ -2038,29 +2191,130 @@ app.post('/teamlistInfo/:eventName/:email', async (req, res) => {
     }
           })
         
-      })
+      }
+    })
+  })
     
   
+// player verification function
+//load players
+app.get('/playerInfo/:eventName', async(req, res) => {
+  const {eventName} = req.params
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear().toString();
+  console.log(eventName, currentYear);
+  db.query('SELECT * FROM players where event_name = ? and event_year = ? ',[eventName, currentYear], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    } else {
+      console.log(results)
+      res.send(results)
+    }
+  })
+})
 
 
+//notify department about unregistered players**********************
+let insertCount = 1;
+app.post('/notifyDepartments/:eventName', async(req, res) => {
+  const {eventName} = req.params
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear().toString();
+  console.log(eventName, currentYear);
 
-// for (const key of Object.keys(values)) {
-//   if (key.startsWith('playerName')) {
-//     const index = key.substring(10); // Extract the index from the key
-//     const playerName = values[key];
-//     const registrationNumber = values[`registrationNumber${index}`];
+  const title = 'Player verification Issue '+eventName;
+  const body = 'Your submitted playerlist has unregistered players. Please submit a proper playerlist to participate in the competition. Thanks'
+  const notification = [{ id: insertCount, title, body }];
+  insertCount++;
 
-//     // Perform the database insertion
-//     db.query(
-//       'INSERT INTO players (playerName, registrationNumber) VALUES (?, ?)',
-//       [playerName, registrationNumber],
-//       (err, result) => {
-//         if (err) {
-//           console.log(err);
-//         } else {
-//           console.log('Insertion successful');
-//         }
-//       }
-//     );
-//   }
+  db.query('SELECT DISTINCT dep_name FROM players WHERE hall IS NULL', (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    } else {
+      console.log(results)
+
+      for (const row of results) {
+        console.log(row.dep_name);
+        db.query('SELECT *  FROM department WHERE dep_name = ?', [row.dep_name],(err, result1) => {
+          if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error' });
+          } else {
+            db.query('SELECT *  FROM userdb WHERE dep_id = ? and UserType = ?', [result1[0].dep_id,'student advisor'],(err, result2) => {
+              if (err) {
+                console.error(err);
+                res.status(500).json({ message: 'Internal server error' });
+              } else {
+                let employeeID = result2[0].employee_id;
+                console.log("employeeID : " + employeeID)
+                db.query('INSERT INTO notification (title, body,receiver_id) VALUES (?, ?,?)',  [title,body,employeeID], (err3, result3) => {
+                  if (err3) {
+                    console.error(err3);
+                    res.status(500).json({ message: 'Internal server error' });
+                  } else {                               
+                  console.log("approved");
+                        db.query('DELETE FROM players WHERE dep_name = ?', [row.dep_name], (err3, results3) => {
+                          if (err3) {
+                            console.error(err3);
+                            res.status(500).json({ message: 'Internal server error' });
+                          }else{
+                                console.log("teamlist deleted");
+                          }
+           })
+          }
+        });
+              }
+            })
+          }
+        })
+      }
+
+    }
+  })
+  // res.send("notifications sent");
+
+})
+
+
+// app.get('/advisorNotifications/:email', (req, res) => {
+//   const email = req.params.email;
+//   db.query('SELECT * FROM employee where email = ? ',[email], (err, results) => {
+//     if (err) {
+//       console.error(err);
+//       res.status(500).json({ message: 'Internal server error' });
+//     } else {
+//       const employeeID = results[0].employee_id;
+//       console.log("employeeID: " + employeeID);
+//   db.query('SELECT * FROM notification where receiver_id = ? ORDER BY created_at DESC',[employeeID], (err, result) => {
+//     if (err) {
+//       console.error(err);
+//       res.status(500).json({ message: 'Internal server error' });
+//     } else {
+//       res.json(result);
+//     } 
+//   });
 // }
+// });});
+
+
+
+// app.get('/advisorNotification/:id', (req, res) => {
+//   const { id } = req.params;
+
+//   const sql = 'SELECT * FROM notification WHERE id = ?';
+//   db.query(sql, [id], (err, results) => {
+//     if (err) {
+//       console.error(err);
+//       res.status(500).json({ message: 'Internal server error' });
+//     } else if (results.length === 0) {
+//       res.status(404).json({ message: 'Notification not found' });
+//     } else {
+//       const notification = results[0];
+//       // res.render('AdvisorNotification', { notification : notification });
+//       res.json(notification);
+
+//     }
+//   });
+// });

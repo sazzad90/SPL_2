@@ -13,30 +13,19 @@ const TitlePage =()=> {
   const [event, setEvent] = useState('');
   const [date, setDate] = useState('');
 
-  //   useEffect(() => {
-  //   axios.get('http://localhost:5050/removePost')
+  // useEffect(() => {
+  //   axios.get('http://localhost:5050/eventNotice')
   //     .then(res => {
-  //       setShowForm(res.data.showPost);
-  //       console.log("1: ",res.data.showPost)
+       
+  //      setEvent(res.data.event);
+  //      setDate(res.data.date);
+  //      setShowForm(true);
+
+  //       console.log("2: ",showForm);
+  //       console.log(' notice posted.')
   //     })
   //     .catch(err => console.log(err));
   // }, []);
-
-  
-
-  useEffect(() => {
-    axios.get('http://localhost:5050/eventNotice')
-      .then(res => {
-       
-       setEvent(res.data.event);
-       setDate(res.data.date);
-       setShowForm(true);
-
-        console.log("2: ",showForm);
-        console.log(' notice posted.')
-      })
-      .catch(err => console.log(err));
-  }, []);
 
 
 

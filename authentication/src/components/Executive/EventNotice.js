@@ -15,6 +15,8 @@ import './EventNotice.css'
 const EventNotice = () => {
     
     const [showForm, setShowForm] = useState(false);
+    const [error, setError] = useState("");
+
     const [fvalue, setFiledValue] = useState({
       name: "",
       startingDate: "",
@@ -32,14 +34,20 @@ const EventNotice = () => {
               [fieldName]: fieldValue
           }
       })
+
   }
-
-
   const addData = (data) => {
     data.preventDefault();
+
+
      const {name, startingDate, deadline} = fvalue;
      const type = 'event';
      const year = new Date().getFullYear();
+     if (new Date(deadline) <= new Date(startingDate)) {
+      // The registration deadline is higher or equal to the event starting date
+      setError("Registration deadline should be before the event starting date");
+      return;
+    }
 
     Axios.post("http://localhost:5050/eventNoticeSubmit",{
         name:name,
@@ -65,11 +73,9 @@ const EventNotice = () => {
 
   return (
     <>
-        <Routes>
+    <Routes>
       <Route path="/ViewEventNotice" element={<ViewEventNotice/>} />
     </Routes>
-
-    {/* <div className='container'> */}
      <div className='half-width container mt-3 d-flex justify-content-center float-start' style={{width:'30%', marginLeft:'200px'}}>
                 <section>
                     {/* <div className='left_side mt-3'>
@@ -119,14 +125,15 @@ const EventNotice = () => {
         </Form.Group>
 
         <Form.Group className="mb-3 col-lg-12" controlId="formBasicEmail">
-          <Form.Label style={{ color: 'white' }}>Starting date</Form.Label>
+          <Form.Label style={{ color: 'white' }}>Event starting date</Form.Label>
           <Form.Control type="date" name='startingDate' onChange={getData} placeholder="Enter starting date of the event" style={{ backgroundColor: '#F7FFCF' }} />
         </Form.Group>
 
         <Form.Group className="mb-3 col-lg-12" controlId="formBasicEmail">
-          <Form.Label style={{ color: 'white' }}>Deadline</Form.Label>
+          <Form.Label style={{ color: 'white' }}>Registration deadline</Form.Label>
           <Form.Control type="date" name='deadline' onChange={getData} placeholder="Enter deadline date for registration" style={{ backgroundColor: '#F7FFCF' }} />
         </Form.Group>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
 
         <Button variant="primary" className='col-lg-6' onClick={addData} type="submit">
           Submit
@@ -135,7 +142,6 @@ const EventNotice = () => {
     </div>
                 </section>
                 </div> 
-
                 
                 <div className=' half-width container float-end' style = {{'marginTop':'80px'}}>
                 {showForm &&
@@ -145,9 +151,6 @@ const EventNotice = () => {
                     </div>
                 }
                  </div>
-
-
-        {/* </div> */}
     </>
   )
 }

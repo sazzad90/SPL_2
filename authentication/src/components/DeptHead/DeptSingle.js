@@ -22,16 +22,17 @@ const DeptSingle=() => {
       fetchNotification();
     }, []);
 
-    const handleDeny = () => {
+    const handleDeny = async() => {
         setShowDenyForm(true);
-    //   axios.post('/denyEventNoticeByDeptHead')
-    //   .then(response => {
-    //     setShowDenyForm(true);
-    //     console.log(response);
-    //     })
-    //     .catch(error => {
-    //       console.error(error);
-    //     });  
+        try {
+          const response = await axios.post(`http://localhost:5050/denyByDeptHead/${id}`,{
+              id:`${id}`,
+          });
+          console.log(response);
+        } catch (error) {
+            console.log(error)  
+      }
+
     };
 
    

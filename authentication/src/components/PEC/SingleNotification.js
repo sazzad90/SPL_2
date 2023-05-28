@@ -23,54 +23,61 @@ const SingleNotification=() => {
       fetchNotification();
     }, []);
 
-    const handleDeny = () => {
-      axios.post('/denyEventNotice')
-      .then(response => {
+let thirdWord;
+    if (notification && notification.title) {
+      const event = notification.title;
+      const words = event.split(' ');
+    
+      // Ensure the array has at least three elements before accessing the third word
+      if (words.length >= 3) {
+         thirdWord = words[3];
+        console.log(thirdWord); // Output: "Name"
+      } else {
+        console.log('Not enough words in the string.');
+      }
+    } else {
+      console.log('Notification or title is undefined.');
+    }
+
+    
+    const handleDeny = async() => {
+      try {
+        const response = await axios.post(`http://localhost:5050/denyEventNotice/${id}`,{
+           eventName: thirdWord,
+        });
         setShowDenyForm(true);
         console.log(response);
-        })
-        .catch(error => {
-          console.error(error);
-        });  
+      } catch (error) {
+          console.log(error)  
+    }
     };
 
-    const handleSendNorth = () => {
-      axios.post('/approveNorthEventNotice', { 
-        id : `${id}` 
-      }).then(response => {
-        setShowNorthForm(true);
+    const handleSendNorth =async () => {
+      try {
+        const response = await axios.post("http://localhost:5050/approveNorthEventNotice",{
+            id:`${id}`,
+        });
+        setShowAllForm(true);
         console.log(response);
-      })
-      .catch(error => {
-        console.error(error);
-      });      
+      } catch (error) {
+      }
 
     };
   
-    const handleSendSouth = () => {
-      axios.post('/approveSouthEventNotice', { 
-        id : `${id}` 
-      }).then(response => {
-        setShowSouthForm(true);
+    const handleSendSouth =async () => {
+      try {
+        const response = await axios.post("http://localhost:5050/approveSouthEventNotice",{
+            id:`${id}`,
+        });
+        setShowAllForm(true);
         console.log(response);
-      })
-      .catch(error => {
-        console.error(error);
-      });      
+      } catch (error) {
+           
 
     };
+  }
   
     const handleSendAll = async() => {
-      // axios.post('/approveAllEventNotice', { 
-      //   id:1
-      //  }).then(response => {
-      //   setShowAllForm(true);
-      //    console.log(response);
-      // })
-      // .catch(error => {
-      //   console.error(error);
-      // });      
-
       try {
         const response = await axios.post("http://localhost:5050/approveAllEventNotice",{
             id:`${id}`,
@@ -81,6 +88,7 @@ const SingleNotification=() => {
           console.log(error)  
     }
     };
+  
 
   return (
     <>

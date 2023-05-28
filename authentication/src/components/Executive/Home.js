@@ -17,6 +17,9 @@ import Axios from 'axios';
 import { useParams } from 'react-router-dom';
 import LogOut from './LogOut';
 import UpdateResults from './UpdateResults';
+import PlayerList from './PlayerList';
+import UnverifiedPlayers from './UnverifiedPlayers';
+import ExecutiveSingle from './ExecutiveSingle';
 
 const Home = () => {
 
@@ -58,12 +61,6 @@ const Home = () => {
   const isNotificationSection = location.pathname.includes('/ExecutiveNotification');
   const isUpdateResults = location.pathname.includes('/UpdateResults');
 
-
-
-
-
-
-
   return (
     <>
     <ExecutiveHeader/>
@@ -74,13 +71,15 @@ const Home = () => {
       <Route path="/GroupStage/Fixture" element={<Fixture/>} />
       <Route path="/KnockOut/*" element={<KnockOut/>} />
       <Route path="/KnockOut/KnockOutFixture" element={<KnockOutFixture/>} />
-      <Route path="/Verification" element={<Verification/>} />
+      <Route path="/Verification/*" element={<Verification/>} />
+      <Route path="/Verification/PlayerList/:eventName/*" element={<PlayerList/>} />
+      <Route path="/Verification/PlayerList/:eventName/UnverifiedPlayers" element={<UnverifiedPlayers/>} />
       <Route path="/ForwardEventNotice" element={<ForwardEventNotice/>} />
       <Route path="/ForwardTeamlistNotice" element={<ForwardTeamlistNotice/>} />
       <Route path="/PostEventNotice" element={<PostEventNotice/>} />
       <Route path="/ExecutiveNotification/*" element={<ExecutiveNotification/>} />
       <Route path="/UpdateResults/*" element={<UpdateResults/>} />
-
+      <Route path="/ExecutiveNotification/ExecutiveSingle/:id" element={<ExecutiveSingle/>} /> 
       <Route path="/LogOut" element={<LogOut/>} />
 
       
