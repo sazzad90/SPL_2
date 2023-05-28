@@ -158,6 +158,7 @@ import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import AuthService from './AuthService';
+import './login.css'; 
 
 const Login = () => {
 
@@ -259,14 +260,14 @@ const Login = () => {
     return (
         <>
             <Header />
-            <div className='container mt-3'>
-                <section>
-                    <div className='left_side mt-3'>
-                        <h3 className='text-center col-lg-12'>Sign In</h3>
-                        <Form onSubmit={handleSubmit}>
+            <div className='container d-flex justify-content-start' style={{marginTop:'100px', width:'100%'}}>
+                {/* <section> */}
+                    <div className='rounded' style={{backgroundColor: '#0A4770', width:'30%', height : '400px', color:'white'}}>
+                        <h3 className='text-center col-lg-12 mt-3'>Sign In</h3>
+                        <Form onSubmit={handleSubmit} style ={{width:'80%', marginLeft:'20px'}}>
 
                             <Form.Group className='mb-3 col-lg-12' controlId='formBasicEmail'>
-                                <Form.Label>Email address</Form.Label>
+                                <Form.Label className='mt-3'><strong>Email address </strong></Form.Label>
                                 <Form.Control
                                     type='email'
                                     name='email'
@@ -284,7 +285,7 @@ const Login = () => {
                                 className='mb-3 col-lg-12'
                                 controlId='formBasicPassword'
                             >
-                                <Form.Label>Password</Form.Label>
+                                <Form.Label className='mt-3'> <strong>Password </strong></Form.Label>
                                 <Form.Control
                                     type='password'
                                     name='password'
@@ -304,12 +305,12 @@ const Login = () => {
                                 </Alert>
                             }
 
-                            <Button variant="primary" className='col-lg-5' onClick={handleSubmit} type="submit">
+                            <Button variant="primary form-group-hover" style={{marginTop:"30px", marginLeft:'90px'}} className='col-lg-5' onClick={handleSubmit} type="submit">
                                 Sign In
                             </Button>
                         </Form>
                     </div>
-                </section>
+                {/* </section> */}
             </div>
         </>
     )

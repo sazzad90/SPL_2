@@ -6,7 +6,7 @@ import Axios from 'axios';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import LogOut from './LogOut';
-
+import DeptSingle from './DeptSingle';
 
 const DeptHeadHome =()=> {
   const [profileData, setProfileData] = useState(null);
@@ -18,13 +18,8 @@ const DeptHeadHome =()=> {
    
      Axios.get(`http://localhost:5050/fetchProfile/${email}`,{})
      .then((response) => {
-   
       console.log("response : " + response);
-      const name = response.data.name;
-      const designation = response.data.designation;
       setProfileData(response.data);
- 
-  
 })
 .catch((err) => {
   console.log(err);
@@ -40,7 +35,7 @@ const DeptHeadHome =()=> {
     <Routes>
     <Route path="/DeptHeadNotification/*" element={<DeptHeadNotification/>} />
     <Route path="/LogOut" element={<LogOut/>} />
-
+    <Route path="/DeptHeadNotification/DeptSingle/:id" element={<DeptSingle/>} /> 
     </Routes>
 
      <div className="flex-grow-1 d-flex align-items-flex-start justify-content-center">
@@ -66,15 +61,9 @@ const DeptHeadHome =()=> {
               </tbody>
             </table>
           </div>
-          
-          // : (
-          //   <p>Loading...</p>
-          // )
           }
           
-        </div> 
-   
-            
+        </div>        
     </>
   )
 }

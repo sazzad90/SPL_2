@@ -2,31 +2,23 @@ import React from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom';
 import PECNotification from './PECNotification';
 import PECHeader from './PECHeader';
-import ViewEventNoticeList from './ViewEventNoticeList';
 import { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { useParams } from 'react-router-dom';
 import LogOut from './LogOut';
+import SingleNotification from './SingleNotification';
 
 const PECHome =()=> {
   const [profileData, setProfileData] = useState(null);
   const location = useLocation();
 
   const {email} = useParams();
-
-
-
   useEffect(() => {
     console.log(email)
-   
      Axios.get(`http://localhost:5050/fetchProfile/${email}`,{}
      )
      .then((response) => {
-     
       console.log(response.data);
-      const name = response.data.name;
-      const designation = response.data.designation;
-      
       setProfileData(response.data);
 })
 .catch((err) => {
@@ -44,7 +36,7 @@ const PECHome =()=> {
     <Routes>
     <Route path="/PECNotification/*" element={<PECNotification/>} />
     <Route path="/LogOut" element={<LogOut/>} />
-
+    <Route path="/PECNotification/SingleNotification/:id" element={<SingleNotification/>} /> 
     </Routes>
 
  <div className="d-flex">

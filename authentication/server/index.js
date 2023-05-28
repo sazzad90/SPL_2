@@ -1566,7 +1566,8 @@ app.get('/pecnotification/:id', (req, res) => {
         res.status(404).json({ message: 'Notification not found' });
       } else {
         const notification = results[0];
-        res.render('PECNotification', { notification: notification });
+   //     res.render('PECNotification', { notification: notification });
+   res.json(notification)
       }
     });
   });
@@ -1615,8 +1616,8 @@ app.use(bodyParser.json());
 
 
 app.post('/approveAllEventNotice', (req, res) => {
-  const id  = req.body.notificationId;
-  console.log(id)
+  const id  = req.body.id;
+  console.log('id: ',id)
   const userType = 'head';
 
 db.query('select * from notification where id = ?',[id], (err2, result2) => {
@@ -1643,22 +1644,22 @@ db.query('select employee_id from userdb where UserType = ?',[userType], (err, r
         res.status(500).json({ message: 'Internal server error' });
       } else {
         console.log("approved");
-
       }
     });
   });
   }
-})  
+}) 
+res.send('ok')
+
     }
   })
 
 });
 
-
+//dept head notifications
 app.get('/deptHeadNotifications/:email', (req, res) => {
-  const email = req.params.email;
-  // const params = [1];
-
+  const {email} = req.params;
+  console.log('email: ',email);
   db.query('SELECT * FROM employee where email = ? ',[email], (err, results) => {
     if (err) {
       console.error(err);
@@ -1681,7 +1682,7 @@ app.get('/deptHeadNotifications/:email', (req, res) => {
 
 
 app.get('/deptHeadNotification/:id', (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
   const sql = 'SELECT * FROM notification WHERE id = ?';
   db.query(sql, [id], (err, results) => {
@@ -1692,7 +1693,7 @@ app.get('/deptHeadNotification/:id', (req, res) => {
       res.status(404).json({ message: 'Notification not found' });
     } else {
       const notification = results[0];
-      res.render('DeptHeadNotification', { notification : notification });
+      res.json(notification);
     }
   });
 });
@@ -1703,8 +1704,8 @@ app.get('/deptHeadNotification/:id', (req, res) => {
 
 //advisor notification starts
 
-app.post('/approveEventNoticeByHead', (req, res) => {
-  const id  = req.body.notificationId;
+app.post('/approveEventNoticeByHead', async(req, res) => {
+  const id  = req.body.id;
   console.log(id)
 
   db.query('SELECT * FROM notification where id = ? ',  [id], (err, result) => {
@@ -1734,8 +1735,7 @@ app.post('/approveEventNoticeByHead', (req, res) => {
               res.status(500).json({ message: 'Internal server error' });
             } else {
       console.log("approved");
-      // const notification = { id: result.insertId, title, body };
-      res.send("approved");
+      // res.send("approved");
     }
   });
 }
@@ -1744,6 +1744,7 @@ app.post('/approveEventNoticeByHead', (req, res) => {
 });
 }
 });
+res.send("approved");
 });
 
 
@@ -1769,10 +1770,8 @@ app.get('/advisorNotifications/:email', (req, res) => {
 
 
 
-app.get('/advisorNotification/:id/:email', (req, res) => {
+app.get('/advisorNotification/:id', (req, res) => {
   const { id } = req.params;
-  const email = req.params.email;
-
 
   const sql = 'SELECT * FROM notification WHERE id = ?';
   db.query(sql, [id], (err, results) => {
@@ -1784,7 +1783,7 @@ app.get('/advisorNotification/:id/:email', (req, res) => {
     } else {
       const notification = results[0];
       // res.render('AdvisorNotification', { notification : notification });
-      res.render('AdvisorNotification', { notification: notification, email: email });
+      res.json(notification);
 
     }
   });
@@ -1860,8 +1859,7 @@ app.get('/updateResults', (req, res) => {
   });
 
 console.log('formatted: ',currentDate);
-const dateTime = 'Sun, May 28, 23';
-  db.query('SELECT * FROM fixture where time=? ',[dateTime], (err, results) => {
+  db.query('SELECT * FROM fixture where time=? ',[currentDate], (err, results) => {
     if (err) {
       console.error(err);
       res.status(500).json({ message: 'Internal server error' });
@@ -1875,31 +1873,194 @@ const dateTime = 'Sun, May 28, 23';
 })
 
 
-app.post('/updateResults', (req, res) => {
-  const dataObject = req.body.dataObject;
-  console.log(dataObject.undefined)
+// app.post('/updateResults', (req, res) => {
+//   const matches = req.body.matches;
+//   console.log(matches)
 
-  const dataArray = dataObject.undefined;
+//   matches.forEach((data) => {
+//   const { fixtureID,score1, score2,winner } = data;
+//   console.log('fixtureID:',fixtureID);
+//   console.log('winner:',winner);
 
-// Iterate over the array and access individual objects
-  dataArray.forEach((data) => {
-  const { team1, team2, score1, score2 } = data;
-  console.log(`${team1} vs ${team2}: ${score1}-${score2}`);
-  const firstTeam = `${team1} `;
-  const secondTeam = `${team2} `;
-  const s1 = `${score1}`;
-  const s2 = `${score2}`;
+//   db.query("update  fixture set score1 = ?  ,score2 = ? ,winner = ? where fixtureID = ? ",[score1,score2,winner,fixtureID], (err, result2) => {
+//             if (err) {
+//                 console.log(err);
+//             } else {
+//                 res.send(result2);
+//             }
+//         });
 
 
-  db.query("INSERT into fixture(Employee_id,Name, Email, Password, userID,dep_id,userType) values(?,?,?,?,?,?,?)",
-        [employeeID,name,email, hashedPassword, userID,dept_id,userType], (err, result2) => {
+// });
+// })
+
+app.post('/updateResults', async (req, res) => {
+  const matches = req.body.matches;
+  console.log(matches);
+
+  try {
+    for (const data of matches) {
+      const { fixtureID, score1, score2, winner } = data;
+      console.log('fixtureID:', fixtureID);
+      console.log('winner:', winner);
+
+      await new Promise((resolve, reject) => {
+        db.query(
+          "UPDATE fixture SET score1 = ?, score2 = ?, winner = ? WHERE fixtureID = ?",
+          [score1, score2, winner, fixtureID],
+          (err, result) => {
             if (err) {
-                console.log(err);
+              console.log(err);
+              reject(err);
             } else {
-                res.send(result2);
+              resolve();
             }
-        });
+          }
+        );
+      });
+    }
 
-
+    res.send('All rows updated successfully.');
+  } catch (error) {
+    res.status(500).send('An error occurred while updating rows.');
+  }
 });
+
+
+
+//event registration by advisor
+app.post('/eventRegistration/:email', async (req, res) => {
+  const {email} = req.params;
+  const id = req.body.id;
+
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+
+  db.query('SELECT * FROM notification where id = ? ',[id], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    } else {
+      const title = results[0].title;
+      console.log('title: ',results[0].title);
+
+      const match = title.match(/Event Notice: (\w+)/);
+      const finalTitle = match && match[1];
+
+console.log('final title: ',finalTitle); 
+
+  db.query('SELECT * FROM userdb where email = ? ',[email], (err1, result1) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    } else {
+      const deptID = result1[0].dep_id;
+      console.log("deptID");
+
+      db.query('INSERT INTO teams (event_name, dep_id,year) VALUES (?,?,?)',  [finalTitle,deptID,currentYear], (err2, result2) => {
+        if (err2) {
+          console.error(err2);
+          res.status(500).json({ message: 'Internal server error' });
+        } else {
+          console.log(result2);
+        }
+      })
+
+    }
+  })
+}
+  });
+  res.send('registered')
 })
+
+// team list submission by advisor
+
+app.post('/teamlistInfo/:eventName/:email', async (req, res) => {
+  const {eventName}  =req.params;
+  const {email}  =req.params;
+
+  const playerlist = req.body.playerlist;
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+
+  db.query('SELECT * FROM userdb where email = ? ',[email], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    } else {
+      const dep_id = result[0].dep_id;
+      console.log("dep_id: " + dep_id);
+
+      const entries = Object.entries(playerlist)
+      for (const [key, value] of entries) {
+        if (key.startsWith('playerName')) {
+          const index = key.substring(10); // Extract the index from the key
+          const playerName = value;
+          const registrationNumber = playerlist[`registrationNumber${index}`];
+
+          let session;
+          let hall;
+
+          db.query('SELECT * FROM students where reg_no = ? ',[registrationNumber], (err1, result1) => {
+
+              if (err1) {
+                console.error(err);
+                res.status(500).json({ message: 'Internal server error' });
+              } else {
+                session = result1[0].session;
+                hall = result1[0].hall;
+
+                console.log("session: " + session);
+
+
+                // for (const [key, value] of entries) {
+                //   if (key.startsWith('playerName')) {
+                //     const index = key.substring(10); // Extract the index from the key
+                //     const playerName = value;
+                //     const registrationNumber = playerlist[`registrationNumber${index}`];
+              
+                    // Perform the database insertion
+                    db.query('INSERT INTO players (name, event_name, dep_id, reg_no, session, hall) VALUES (?, ?, ?, ?, ?, ?)',
+                      [playerName, eventName, dep_id, registrationNumber,session, hall ],
+                      (err3, result3) => {
+                        if (err3) {
+                          console.log(err);
+                        } else {
+                          console.log('Insertion successful');
+                        }
+                  });
+                  // }}
+                
+              }
+            })
+              }
+      }
+    }
+          })
+        
+      })
+    
+  
+
+
+
+// for (const key of Object.keys(values)) {
+//   if (key.startsWith('playerName')) {
+//     const index = key.substring(10); // Extract the index from the key
+//     const playerName = values[key];
+//     const registrationNumber = values[`registrationNumber${index}`];
+
+//     // Perform the database insertion
+//     db.query(
+//       'INSERT INTO players (playerName, registrationNumber) VALUES (?, ?)',
+//       [playerName, registrationNumber],
+//       (err, result) => {
+//         if (err) {
+//           console.log(err);
+//         } else {
+//           console.log('Insertion successful');
+//         }
+//       }
+//     );
+//   }
+// }

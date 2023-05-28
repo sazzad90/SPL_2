@@ -70,7 +70,7 @@ const EventNotice = () => {
     </Routes>
 
     {/* <div className='container'> */}
-     <div className='half-width container mt-3 d-flex justify-content-center w-100' >
+     <div className='half-width container mt-3 d-flex justify-content-center float-start' style={{width:'30%', marginLeft:'200px'}}>
                 <section>
                     {/* <div className='left_side mt-3'>
                         <h3 className='col-lg-12'>Event Notice</h3>
@@ -103,8 +103,8 @@ const EventNotice = () => {
 
                     </div> */}
                     
-    <div className='left_side mt-3 w-100' style={{ backgroundColor: '#0A4770', padding: '20px', borderRadius: '10px' }}>
-      <h3 className='col-lg-12' style={{ color: 'white', marginBottom: '20px' }}>Evemt Notice</h3>
+    <div className='left_side mt-3 ml-10 w-100' style={{ backgroundColor: '#0A4770', padding: '20px', borderRadius: '10px', }}>
+      <h3 className='col-lg-12' style={{ color: 'white', marginBottom: '20px' }}>Event Notice</h3>
       <Form>
         <Form.Group className="mb-3 col-lg-12" controlId="formBasicName">
           <Form.Label htmlFor="dropdown" style={{ color: 'white' }}>Event name</Form.Label>
@@ -137,7 +137,7 @@ const EventNotice = () => {
                 </div> 
 
                 
-                <div className=' half-width container mt-3'>
+                <div className=' half-width container float-end' style = {{'marginTop':'80px'}}>
                 {showForm &&
                     <div>
                     <ViewEventNotice name = {fvalue.name} firstDate = {fvalue.startingDate} lastDate = {fvalue.deadline} />

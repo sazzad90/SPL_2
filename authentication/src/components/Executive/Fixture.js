@@ -4,6 +4,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table } from 'react-bootstrap';
+import './header.css'; // Import the CSS file
 
 const Fixture =()=> {
   const [data, setData] = useState([]);
@@ -39,13 +40,15 @@ const Fixture =()=> {
 
   return (
     <>
-
-    <div className='d-flex justify-content-center'>
+    <div className='d-flex justify-content-end'>
+    <div className='d-flex justify-content-center' style={{width:'90%'}}>
         
         <h2>Fixtures</h2>
       
     </div>
-    <div className='d-flex w-70 justify-content-center'>
+    </div>
+    <div className='d-flex justify-content-end'>
+    <div className='d-flex justify-content-center' style={{width:'90%'}}>
       {/* <h2 style={{ textAlign: 'center' }}>Fixtures</h2> */}
       <Table striped bordered hover>
         <thead>
@@ -58,16 +61,17 @@ const Fixture =()=> {
           </tr>
         </thead>
         <tbody>
-          {data.map(f => (
-            <tr key={f.fixtureID}>
-              <td style={{ textAlign: 'center' }}>{f.team1}</td>
+          {data.map((f,index) => (
+            <tr key={f.fixtureID} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+              <td style={{ textAlign: 'center' }}><strong>{f.team1}</strong></td>
               <td style={{ textAlign: 'center' }}>{f.time} <br/> {f.matchTime}</td>
-              <td style={{ textAlign: 'center' }}>{f.team2}</td>
+              <td style={{ textAlign: 'center' }}><strong>{f.team2}</strong></td>
 
             </tr>
           ))}
         </tbody>
       </Table>
+    </div>
     </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '25px'}}>
         <Button variant="primary" className='col-lg-1' onClick={addData} type="submit"> Publish </Button>

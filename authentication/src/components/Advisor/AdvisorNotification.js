@@ -29,7 +29,7 @@ const AdvisorNotification =()=> {
     <ul style={{ listStyle: 'none',width: '100%', margin: 0, padding: 0  }}>
        {notifications.map((notification) => (
         <li key={notification.id} style={{textDecoration: 'none'}}>
-          <Link to={`http://localhost:5050/advisorNotification/${notification.id}/${email}`} style={{ textDecoration: 'none' }}>
+          <Link to={`/AdvisorHome/${email}/AdvisorNotification/AdvisorSingle/${notification.id}`} style={{ textDecoration: 'none' }}>
           <div class="d-grid">
             <button type="button" class="btn btn-outline-secondary btn-block" style={{fontFamily: 'Proxima Nova',color:'black',textAlign:'left',paddingLeft:'80px'}}><strong>  {notification.title}</strong></button>
           </div>

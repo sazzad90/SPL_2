@@ -7,6 +7,9 @@ import Axios from 'axios';
 import { useParams } from 'react-router-dom';
 import RegistrationForm from './RegistrationForm';
 import LogOut from './LogOut';
+import AdvisorSingle from './AdvisorSingle';
+import TeamListForm from './TeamListForm';
+
 const AdvisorHome =()=> {
   const [profileData, setProfileData] = useState(null);
   const location = useLocation();
@@ -46,9 +49,9 @@ const AdvisorHome =()=> {
     <Route path="/AdvisorNotification/*" element={<AdvisorNotification/>} />
     <Route path="/RegistrationForm/*" element={<RegistrationForm/>} />
     <Route path="/LogOut" element={<LogOut/>} />
+    <Route path='/AdvisorNotification/AdvisorSingle/:id/*' element={<AdvisorSingle/>} />
+    <Route path='/AdvisorNotification/AdvisorSingle/:id/TeamListForm/:eventName' element={<TeamListForm/>} />
 
-
-  
     </Routes>  
 
     <div className="d-flex">
@@ -75,17 +78,10 @@ const AdvisorHome =()=> {
               </tbody>
             </table>
           </div>
-          
-          // ): (
-          //   <p>Loading...</p>
-          // )
         }
           
         </div>
-        </div>
-   
-   
-            
+        </div>         
     </>
   )
 }

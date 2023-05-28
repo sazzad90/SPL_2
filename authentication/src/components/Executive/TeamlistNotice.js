@@ -65,7 +65,7 @@ const addData = (data) => {
 
   return (
     <div className='cotainer d-block justify-content-center'>
-    <div className='half-width container mt-3 d-flex justify-content-center'>
+    <div className='half-width container mt-3 d-flex justify-content-center float-start' style = {{width:'30%', marginLeft:'200px'}}>
                 <section>
                     <div className='left_side mt-3'>
                         {/* <h3 className='col-lg-12'>Team List Notice</h3><br /> */}
@@ -125,7 +125,7 @@ const addData = (data) => {
 
                 
 
-                <div className=' half-width container mt-3'>
+                <div className=' half-width container mt-3 float-end'>
                 {showForm &&
                   <div>
                     <ViewTeamlistNotice name = {fvalue.name} firstDate = {fvalue.startingDate} lastDate = {fvalue.deadline} />

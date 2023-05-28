@@ -9,6 +9,8 @@ import axios from 'axios';
 const Fixture =()=> {  
 
   const [showForm, setShowForm] = useState(false);
+  const [showForm1, setShowForm1] = useState(false);
+
   const [data, setData] = useState([]);
 
 
@@ -22,6 +24,8 @@ const Fixture =()=> {
       .catch((error) => {
         console.log(error);
       });
+
+      console.log('data: ',data);
   }, []);
 
 
@@ -44,14 +48,24 @@ const Fixture =()=> {
          </thead>
          <tbody>
            {data.map(f => (
-             <tr key={f.fixtureID}>
-               <td style={{ textAlign: 'center' }}>{f.team1}</td>
-               <td style={{ textAlign: 'center' }}>{f.time}<br/>{f.matchTime}</td>
-               <td style={{ textAlign: 'center' }}>{f.team2}</td>
- 
-             </tr>
+            <React.Fragment key={f.fixtureID}>
+            <tr>
+              <td style={{ textAlign: 'center',  border: f.team1 === f.winner ? '2px solid green' : '1px solid black'}}>{f.team1}</td>
+              <td style={{ textAlign: 'center', borderRight:'1px solid black' }}>{f.time}<br/>{f.matchTime}</td>
+              <td style={{ textAlign: 'center', border: f.team2 === f.winner ? '2px solid green' : '1px solid black' }}>{f.team2}</td>
+            </tr>
+            <tr>
+              <td style={{ textAlign: 'center' }}>{f.score1}</td>
+              <td style={{ textAlign: 'center' }}></td>
+              <td style={{ textAlign: 'center' }}>{f.score2}</td>
+            </tr>
+          </React.Fragment>
+
            ))}
+
          </tbody>
+
+
        </Table>
      </div>
   }

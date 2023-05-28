@@ -86,18 +86,19 @@ const Home = () => {
       
     </Routes>  
    
-    <div className="flex-grow-1 d-flex align-items-flex-start justify-content-center">
+    <div className="flex-grow-1 d-flex justify-content-center">
           {!isNotificationSection && !isEventNoticeSection && !isTeamlistNoticeSection &&
           !isGroupStageSection && !isFixtureSection && !isKnockOutSection    && !isKnockOutFixtureSection &&
           !isVerificationSection && !isForwardEventNoticeSection   && !isForwardTeamlistNoticeSection   &&
           !isPostEventNoticeSection   && !isExecutiveNotificationSection && !isUpdateResults && profileData && 
-            <div className="container mt-4 d-flex justify-content-center">
-            <table className="table" style={{maxWidth : '400px', maxHeight:'200px'}}>
+            <div className="container mt-4 d-flex justify-content-center" style = {{width:'40%'}}>
+              <img style ={{height:'50%', width:'50%', marginTop:'50px', display:'block'}} src = "https://deltamar.sites.uu.nl/wp-content/uploads/sites/307/2017/09/Dhaka_University_logo-740x537.png"/>         
+            <table className="table" style={{maxWidth : '400px', maxHeight:'200px',}}>
               <tbody>
                 <tr style={{borderColor : 'white'}}>
                   <td colSpan={2}><h2>User Information</h2></td>
                 </tr>
-                <tr>
+                <tr> 
                   <th>Name</th>
                   <td>{profileData.name}</td>
                 </tr>
@@ -111,7 +112,7 @@ const Home = () => {
                 </tr>
               </tbody>
             </table>
-          </div>
+            </div>
           
           // : (
           //   <p>Loading...</p>
