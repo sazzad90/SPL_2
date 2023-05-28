@@ -3,26 +3,24 @@ import Header from './Header'
 import { Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './PostEventNotice.css'
-
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-const Fixture =()=> {  
 
+const VolleyballFixture =()=> {  
   const [showForm, setShowForm] = useState(false);
   const [showForm1, setShowForm1] = useState(false);
 
   const [data, setData] = useState([]);
-
-
+  
+const eventType = 'Volleyball'
   useEffect(() => {
-    axios.get('http://localhost:5050/publishFixture')
+    axios.get('http://localhost:5050/publishVolleyballFixture')
       .then((response) => {
         setData(response.data);
         console.log(response.data);
         if(response.data.length != 0) {
-          setShowForm(true);
-        } 
-      })
+            setShowForm(true);
+          }       })
       .catch((error) => {
         console.log(error);
       });
@@ -87,4 +85,4 @@ const Fixture =()=> {
   )
 }
 
-export default Fixture
+export default VolleyballFixture

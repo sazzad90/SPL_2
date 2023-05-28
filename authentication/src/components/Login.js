@@ -57,7 +57,7 @@
 //                 if (response) {
 //                  //   const pass = response.data[0].Password;
 //                     console.log(response);
-                    
+
 //                     if(response.data.sign){
 //                         if (fvalue.OTP === "") {
 //                             Axios.post("http://localhost:5050/authentication", {
@@ -73,7 +73,7 @@
 //                             });
 //                         }
 //                         else {
-                            
+
 //                             const otp = fvalue.enteredOTP
 //                             const OTP = fvalue.OTP
 
@@ -158,11 +158,15 @@ import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import AuthService from './AuthService';
-import './login.css'; 
+import './login.css';
+import { Modal } from 'antd';
+import Link from 'antd/es/typography/Link';
+import ForgetPassword from './ForgetPassword';
 
 const Login = () => {
 
     const history = useNavigate();
+    const [forgottenPasswordModal, setForgottenPasswordModal] = useState(false);
 
     const [formData, setFormData] = useState({
         email: "",
@@ -218,22 +222,22 @@ const Login = () => {
                         console.log(token)
 
                         if (token) {
-                            if(UserID == 'executive'){
-                            console.log("in here", UserID);
-                            AuthService.setToken(token)
-                            history(`/Home/${email}`);
+                            if (UserID == 'executive') {
+                                console.log("in here", UserID);
+                                AuthService.setToken(token)
+                                history(`/Home/${email}`);
                             }
-                            else if(UserID == 'head'){
+                            else if (UserID == 'head') {
                                 console.log("in here", UserID);
                                 AuthService.setToken(token)
                                 history(`/DeptHeadHome/${email}`);
                             }
-                            else if(UserID == 'student advisor'){
+                            else if (UserID == 'student advisor') {
                                 console.log("in here", UserID);
                                 AuthService.setToken(token)
                                 history(`/AdvisorHome/${email}`);
                             }
-                            else if(UserID == 'pec head'){
+                            else if (UserID == 'pec head') {
                                 console.log("in here", UserID);
                                 AuthService.setToken(token)
                                 history(`/PECHome/${email}`);
@@ -257,61 +261,82 @@ const Login = () => {
 
     }
 
+    function handleForgetPasswordModalCancel() {
+        setForgottenPasswordModal(false);
+    }
+
+    function handleForgetPassword() {
+        setForgottenPasswordModal(true);
+    }
+
     return (
         <>
             <Header />
-            <div className='container d-flex justify-content-start' style={{marginTop:'100px', width:'100%'}}>
+            <div className='container d-flex justify-content-start' style={{ marginTop: '100px', width: '100%' }}>
                 {/* <section> */}
-                    <div className='rounded' style={{backgroundColor: '#0A4770', width:'30%', height : '400px', color:'white'}}>
-                        <h3 className='text-center col-lg-12 mt-3'>Sign In</h3>
-                        <Form onSubmit={handleSubmit} style ={{width:'80%', marginLeft:'20px'}}>
+                <div className='rounded' style={{ backgroundColor: '#0A4770', width: '30%', height: '400px', color: 'white' }}>
+                    <h3 className='text-center col-lg-12 mt-3'>Sign In</h3>
+                    <Form onSubmit={handleSubmit} style={{ width: '80%', marginLeft: '20px' }}>
 
-                            <Form.Group className='mb-3 col-lg-12' controlId='formBasicEmail'>
-                                <Form.Label className='mt-3'><strong>Email address </strong></Form.Label>
-                                <Form.Control
-                                    type='email'
-                                    name='email'
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    placeholder='Enter your email'
-                                    isInvalid={!!formErrors.email}
-                                />
-                                <Form.Control.Feedback type='invalid'>
-                                    {formErrors.email}
-                                </Form.Control.Feedback>
-                            </Form.Group>
+                        <Form.Group className='mb-3 col-lg-12' controlId='formBasicEmail'>
+                            <Form.Label className='mt-3'><strong>Email address </strong></Form.Label>
+                            <Form.Control
+                                type='email'
+                                name='email'
+                                value={formData.email}
+                                onChange={handleChange}
+                                placeholder='Enter your email'
+                                isInvalid={!!formErrors.email}
+                            />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.email}
+                            </Form.Control.Feedback>
+                        </Form.Group>
 
-                            <Form.Group
-                                className='mb-3 col-lg-12'
-                                controlId='formBasicPassword'
-                            >
-                                <Form.Label className='mt-3'> <strong>Password </strong></Form.Label>
-                                <Form.Control
-                                    type='password'
-                                    name='password'
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    placeholder='Enter your password'
-                                    isInvalid={!!formErrors.password}
-                                />
-                                <Form.Control.Feedback type='invalid'>
-                                    {formErrors.password}
-                                </Form.Control.Feedback>
-                            </Form.Group>
+                        <Form.Group
+                            className='mb-3 col-lg-12'
+                            controlId='formBasicPassword'
+                        >
+                            <Form.Label className='mt-3'> <strong>Password </strong></Form.Label>
+                            <Form.Control
+                                type='password'
+                                name='password'
+                                value={formData.password}
+                                onChange={handleChange}
+                                placeholder='Enter your password'
+                                isInvalid={!!formErrors.password}
+                            />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.password}
+                            </Form.Control.Feedback>
+                        </Form.Group>
 
-                            {errorDivShow &&
-                                <Alert variant="danger" className='mb-3 col-lg-12' onClose={() => setErrorDivShow(false)} dismissible>
-                                    {error}
-                                </Alert>
-                            }
+                        {errorDivShow &&
+                            <Alert variant="danger" className='mb-3 col-lg-12' onClose={() => setErrorDivShow(false)} dismissible>
+                                {error}
+                            </Alert>
+                        }
 
-                            <Button variant="primary form-group-hover" style={{marginTop:"30px", marginLeft:'90px'}} className='col-lg-5' onClick={handleSubmit} type="submit">
-                                Sign In
-                            </Button>
-                        </Form>
-                    </div>
+                        <Button variant="primary form-group-hover" style={{ marginTop: "30px", marginLeft: '90px' }} className='col-lg-5' onClick={handleSubmit} type="submit">
+                            Sign In
+                        </Button>
+
+                        <div className="register-link" style={{ marginTop: '24px', fontSize: '18px' }}>
+                            <Link onClick={handleForgetPassword}>Forgotten Password?</Link>
+                        </div>
+                    </Form>
+                </div>
                 {/* </section> */}
             </div>
+
+            <Modal
+                visible={forgottenPasswordModal}
+                title="Change Password"
+                onCancel={handleForgetPasswordModalCancel}
+                footer={null}
+            >
+                <ForgetPassword />
+            </Modal>
         </>
     )
 }

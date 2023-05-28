@@ -158,7 +158,7 @@ const TeamListForm = () => {
 
     useEffect(() => {
     if(eventName === 'Football'){
-        setPlayerCount(2);
+        setPlayerCount(26);
     }else if(eventName === 'Cricket'){
         setPlayerCount(15);
 
@@ -197,11 +197,13 @@ const TeamListForm = () => {
 
       {Array.from({ length: playerCount }).map((_, index) => (
         <Row key={index} gutter={16}>
-          <Form.Item label={`Player ${index + 1} Name`} name={`playerName${index + 1}`} rules={[{ required: true, message: 'Please enter player name' }]}>
+       <Form.Item label={` ${index + 1}`} name={`playerName${index + 1}`} >
+          </Form.Item>
+          <Form.Item label={`Name`} name={`playerName${index + 1}`} rules={[{ required: true, message: 'Please enter player name' }]}>
             <Input />
           </Form.Item>
 
-          <Form.Item label={`Player ${index + 1} Registration Number`} name={`registrationNumber${index + 1}`} rules={[{ required: true, message: 'Please enter registration number' }]}>
+          <Form.Item label={`Reg. no`} name={`registrationNumber${index + 1}`} rules={[{ required: true, message: 'Please enter registration number' }]}>
             <Input />
           </Form.Item>
         </Row>

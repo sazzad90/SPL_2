@@ -16,11 +16,21 @@ const EventNotice = () => {
     
     const [showForm, setShowForm] = useState(false);
     const [error, setError] = useState("");
+    const [firstDate, setFirstDate] = useState('');
+    const [secondDate, setSecondDate] = useState('');
+
+    const handleFirstDateChange = (event) => {
+      setFirstDate(event.target.value);
+    };
+  
+    const handleSecondDateChange = (event) => {
+      setSecondDate(event.target.value);
+    };
 
     const [fvalue, setFiledValue] = useState({
       name: "",
-      startingDate: "",
-      deadline:"",
+      // startingDate: "",
+      // deadline:"",
 
     })
 
@@ -36,6 +46,8 @@ const EventNotice = () => {
       })
 
   }
+
+
   const addData = (data) => {
     data.preventDefault();
 
@@ -126,12 +138,12 @@ const EventNotice = () => {
 
         <Form.Group className="mb-3 col-lg-12" controlId="formBasicEmail">
           <Form.Label style={{ color: 'white' }}>Event starting date</Form.Label>
-          <Form.Control type="date" name='startingDate' onChange={getData} placeholder="Enter starting date of the event" style={{ backgroundColor: '#F7FFCF' }} />
+          <Form.Control type="date" name='startingDate' value={firstDate} onChange={handleFirstDateChange} placeholder="Enter starting date of the event" style={{ backgroundColor: '#F7FFCF' }} />
         </Form.Group>
 
         <Form.Group className="mb-3 col-lg-12" controlId="formBasicEmail">
           <Form.Label style={{ color: 'white' }}>Registration deadline</Form.Label>
-          <Form.Control type="date" name='deadline' onChange={getData} placeholder="Enter deadline date for registration" style={{ backgroundColor: '#F7FFCF' }} />
+          <Form.Control type="date" name='deadline' max = {firstDate}  onChange={handleSecondDateChange} placeholder="Enter deadline date for registration" style={{ backgroundColor: '#F7FFCF' }} />
         </Form.Group>
         {error && <p style={{ color: 'red' }}>{error}</p>}
 

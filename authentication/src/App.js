@@ -9,19 +9,28 @@ import DeptHeadHome from './components/DeptHead/DeptHeadHome';
 import AdvisorHome from './components/Advisor/AdvisorHome';
 import { Routes,Route } from 'react-router-dom';
 import OTP from './components/OTP';
- 
+
 import Notice from './components/Executive/EventNotice';
 import TitlePage from './components/TitlePage';
-import Fixture from './components/Fixture';
+import Fixture from './components/Fixture'; //football
 import  {BrowserRouter}  from 'react-router-dom';
 import LogOut from './components/Executive/LogOut';
+import CricketFixture from './components/CricketFixture';
+import BasketballFixture from './components/BasketballFixture';
+import VolleyballFixture from './components/VolleyballFixture';
+
 function App() {
   return (
     <>
     <BrowserRouter>
     <Routes>
       <Route path="/" element={<TitlePage/>}/>
+
       <Route path="/Fixture" element={<Fixture/>}/>
+      <Route path="/CricketFixture" element={<CricketFixture/>}/>
+      <Route path="/BasketballFixture" element={<BasketballFixture/>}/>
+      <Route path="/VolleyballFixture" element={<VolleyballFixture/>}/>
+
       <Route path="/Register" element={<Register/>}/>
       <Route path="/login" element={<Login/>} />
       <Route path="/logout" element={<LogOut/>} />

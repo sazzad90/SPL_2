@@ -39,7 +39,6 @@ const GroupStage =()=>{
 
     Axios.post("http://localhost:5050/fixtureInfo",{
         eventName:eventName,
-        // startingDate:startingDate,
         groupNumber:groupNumber,
     }).then((response)=>{
         if(response){
