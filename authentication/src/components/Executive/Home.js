@@ -26,24 +26,24 @@ const Home = () => {
   const [profileData, setProfileData] = useState(null);
   const location = useLocation();
 
-  const {email} = useParams();
+  const { email } = useParams();
 
   useEffect(() => {
     console.log(email)
-   
-     Axios.get(`http://localhost:5050/fetchProfile/${email}`,{}
-     )
-     .then((response) => {
-     
-      console.log(response.data);
-      const name = response.data.name;
-      const designation = response.data.designation;
-      
-      setProfileData(response.data);
-})
-.catch((err) => {
-  console.log(err);
-});
+
+    Axios.get(`http://localhost:5050/fetchProfile/${email}`, {}
+    )
+      .then((response) => {
+
+        console.log(response.data);
+        const name = response.data.name;
+        const designation = response.data.designation;
+
+        setProfileData(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
   }, []);
 
@@ -63,62 +63,68 @@ const Home = () => {
 
   return (
     <>
-    <ExecutiveHeader/>
-    <Routes>
-      <Route path="/EventNotice/*" element={<EventNotice/>} />
-      <Route path="/TeamlistNotice/*" element={<TeamlistNotice/>} />
-      <Route path="/GroupStage/*" element={<GroupStage/>} />
-      <Route path="/GroupStage/Fixture" element={<Fixture/>} />
-      <Route path="/KnockOut/*" element={<KnockOut/>} />
-      <Route path="/KnockOut/KnockOutFixture" element={<KnockOutFixture/>} />
-      <Route path="/Verification/*" element={<Verification/>} />
-      <Route path="/Verification/PlayerList/:eventName/*" element={<PlayerList/>} />
-      <Route path="/Verification/PlayerList/:eventName/UnverifiedPlayers" element={<UnverifiedPlayers/>} />
-      <Route path="/ForwardEventNotice" element={<ForwardEventNotice/>} />
-      <Route path="/ForwardTeamlistNotice" element={<ForwardTeamlistNotice/>} />
-      <Route path="/PostEventNotice" element={<PostEventNotice/>} />
-      <Route path="/ExecutiveNotification/*" element={<ExecutiveNotification/>} />
-      <Route path="/UpdateResults/*" element={<UpdateResults/>} />
-      <Route path="/ExecutiveNotification/ExecutiveSingle/:id" element={<ExecutiveSingle/>} /> 
-      <Route path="/LogOut" element={<LogOut/>} />
+      <ExecutiveHeader />
+      <Routes>
+        <Route path="/EventNotice/*" element={<EventNotice />} />
+        <Route path="/TeamlistNotice/*" element={<TeamlistNotice />} />
+        <Route path="/GroupStage/*" element={<GroupStage />} />
+        <Route path="/GroupStage/Fixture" element={<Fixture />} />
+        <Route path="/KnockOut/*" element={<KnockOut />} />
+        <Route path="/KnockOut/KnockOutFixture" element={<KnockOutFixture />} />
+        <Route path="/Verification/*" element={<Verification />} />
+        <Route path="/Verification/PlayerList/:eventName/*" element={<PlayerList />} />
+        <Route path="/Verification/PlayerList/:eventName/UnverifiedPlayers" element={<UnverifiedPlayers />} />
+        <Route path="/ForwardEventNotice" element={<ForwardEventNotice />} />
+        <Route path="/ForwardTeamlistNotice" element={<ForwardTeamlistNotice />} />
+        <Route path="/PostEventNotice" element={<PostEventNotice />} />
+        <Route path="/ExecutiveNotification/*" element={<ExecutiveNotification />} />
+        <Route path="/UpdateResults/*" element={<UpdateResults />} />
+        <Route path="/ExecutiveNotification/ExecutiveSingle/:id" element={<ExecutiveSingle />} />
+        <Route path="/LogOut" element={<LogOut />} />
 
-      
-    </Routes>  
-   
-    <div className="flex-grow-1 d-flex justify-content-center">
-          {!isNotificationSection && !isEventNoticeSection && !isTeamlistNoticeSection &&
-          !isGroupStageSection && !isFixtureSection && !isKnockOutSection    && !isKnockOutFixtureSection &&
-          !isVerificationSection && !isForwardEventNoticeSection   && !isForwardTeamlistNoticeSection   &&
-          !isPostEventNoticeSection   && !isExecutiveNotificationSection && !isUpdateResults && profileData && 
-            <div className="container mt-4 d-flex justify-content-center" style = {{width:'40%'}}>
-              <img style ={{height:'50%', width:'50%', marginTop:'50px', display:'block'}} src = "https://deltamar.sites.uu.nl/wp-content/uploads/sites/307/2017/09/Dhaka_University_logo-740x537.png"/>         
-            <table className="table" style={{maxWidth : '400px', maxHeight:'200px',}}>
+
+      </Routes>
+
+      <div className="flex-grow-1 d-flex justify-content-center" style={{ backgroundColor: 'lightcyan' }}>
+        {!isNotificationSection && !isEventNoticeSection && !isTeamlistNoticeSection &&
+          !isGroupStageSection && !isFixtureSection && !isKnockOutSection && !isKnockOutFixtureSection &&
+          !isVerificationSection && !isForwardEventNoticeSection && !isForwardTeamlistNoticeSection &&
+          !isPostEventNoticeSection && !isExecutiveNotificationSection && !isUpdateResults && profileData &&
+          <div className="container mt-4 d-flex justify-content-center" style={{ width: '60%' }}>
+
+            <img style={{ height: '80%', width: '40%', marginTop: '30px', display: 'block' }} src="https://deltamar.sites.uu.nl/wp-content/uploads/sites/307/2017/09/Dhaka_University_logo-740x537.png" />
+
+            <table className="table" style={{ maxWidth: '400px', maxHeight: '200px', }}>
               <tbody>
-                <tr style={{borderColor : 'white'}}>
-                  <td colSpan={2}><h2>User Information</h2></td>
+                <tr>
+                  <td colSpan={2}><h2>USER INFORMATION</h2></td>
                 </tr>
-                <tr> 
+                <tr>
                   <th>Name</th>
-                  <td>{profileData.name}</td>
+                  <td style={{ textTransform: 'uppercase', fontFamily: 'timesnewroman' }}>{profileData.name}</td>
                 </tr>
                 <tr>
                   <th>Email</th>
                   <td>{profileData.email}</td>
                 </tr>
                 <tr>
-                  <th>User type</th>
-                  <td>{profileData.designation}</td>
+                  <th>Department</th>
+                  <td style={{ textTransform: 'uppercase' }}>{profileData.department}</td>
+                </tr>
+                <tr>
+                  <th>Designation</th>
+                  <td style={{ textTransform: 'uppercase', fontFamily: 'timesnewroman' }}>{profileData.designation}</td>
                 </tr>
               </tbody>
             </table>
-            </div>
-          
+          </div>
+
           // : (
           //   <p>Loading...</p>
           // )
-          }
-          
-        </div>
+        }
+
+      </div>
     </>
   )
 }

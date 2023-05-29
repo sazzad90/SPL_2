@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'
-import { Table } from 'antd';
+import { Table, message } from 'antd';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-const PlayerList =()=> {
+const PlayerList = () => {
   const navigate = useNavigate()
-    const {email} = useParams()
-    const {eventName} = useParams()
-    const [data, setData] = useState([]);
+  const { email } = useParams()
+  const { eventName } = useParams()
+  const [data, setData] = useState([]);
+  const [showForm, setShowForm] = useState(false);
 
-useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         console.log("Fetching data...");
@@ -20,7 +21,7 @@ useEffect(() => {
         console.log(response);
 
         // const jsonData = await response.json();
-        console.log('r: ',response.data);
+        console.log('r: ', response.data);
         setData(response.data);
         console.log("data: ", data);
 
@@ -32,16 +33,18 @@ useEffect(() => {
     fetchData();
   }, []);
 
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await axios.post(`http://localhost:5050/notifyDepartments/${eventName}`);
       console.log(response);
+      setShowForm(true)
+
+      message.success("Departments are updated successfully");
     } catch (error) {
-      console.log('Error fetching data from the database:', error);
+      message.error("Error while updating the departments");
     }
-    // navigate(`/Home/${email}/Verification/PlayerList/${eventName}/UnverifiedPlayers`) ;
 
   };
 
@@ -56,7 +59,7 @@ useEffect(() => {
       dataIndex: 'reg_no',
       key: 'reg_no',
     },
-    
+
     {
       title: 'Dept. name',
       dataIndex: 'dep_name',
@@ -67,7 +70,7 @@ useEffect(() => {
       dataIndex: 'hall',
       key: 'hall',
     },
-  
+
     {
       title: 'Session',
       dataIndex: 'session',
@@ -89,13 +92,21 @@ useEffect(() => {
   return (
     <>
       <div className="d-flex justify-content-end">
-        <Table style={{ width: '88%' }} dataSource={data} columns={columns} rowClassName={(record) => (hasNullOutput(record) ? 'null-row' : '')} />
+        <Table style={{ width: '88%' }} dataSource={data} columns={columns} rowClassName={(record) => (hasNullOutput(record) ? 'null-row' : 'not-null')} />
       </div>
       <div className="d-flex justify-content-end" style={{ marginRight: '40px' }}>
         <Button type="submit" onClick={handleSubmit}>
           Notify departments
         </Button>
       </div>
+      {showForm &&
+        <div class="row d-flex justify-content-center">
+          <br /><br />
+          <div className='alert alert-success d-block justify-center text-center col-lg-6 mt-4' role="alert" alignment="center">
+            Departments are updated successfully
+          </div>
+        </div>
+      }
       <style>
         {`
           .null-row {
@@ -105,23 +116,6 @@ useEffect(() => {
       </style>
     </>
   );
-
-  // return (
-  // <>
-  
-  //       <div className='d-flex justify-content-end'>
-  //       <Table style = {{width:'88%'}} dataSource={data} columns={columns} />
-        
-  //       </div>
-  //       <div className='d-flex justify-content-end' style = {{marginRight:'40px'}}>
-  //       <Button type="submit" onClick={handleSubmit}>
-  //     Notify departments
-  //   </Button>
-  //   </div>
-
-
-  // </>
-  // )
 }
 
 export default PlayerList

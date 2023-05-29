@@ -56,19 +56,19 @@ const Register = () => {
 
         // validate form fields
         let errors = {};
-        if(!employeeID){
+        if (!employeeID) {
             errors.employeeID = 'Employee ID is required.';
         }
         else {
             axios.post('http://localhost:5050/checkEmployeeID', {
                 employeeID: employeeID,
             }).then(response => {
-                if (response.data === 'Invalid Employee ID'){
+                if (response.data === 'Invalid Employee ID') {
                     errors.employeeID = response.data;
-                }else{
-                    if (response.data === 'Invalid email ID'){
+                } else {
+                    if (response.data === 'Invalid email ID') {
                         errors.email = response.data;
-                    }else{
+                    } else {
                         console.log(response.data);
                     }
                 }
@@ -79,15 +79,15 @@ const Register = () => {
             errors.email = 'Email field is required.';
         } else if (!/\S+@\S+\.\S+/.test(email)) {
             errors.email = 'Enter a valid email address.';
-        }else{
+        } else {
             axios.post('http://localhost:5050/checkEmail', {
                 email: email,
                 employeeID: employeeID,
 
             }).then(response => {
-                if (response.data === 'Invalid Email ID'){
+                if (response.data === 'Invalid Email ID') {
                     errors.email = response.data;
-                }else{
+                } else {
                     console.log(response.data);
                 }
             })
@@ -166,21 +166,21 @@ const Register = () => {
                         <h3 className='text-center col-lg-12'>Sign Up</h3>
                         <Form onSubmit={handleSubmit}>
 
-                        <Form.Group className='mb-3 col-lg-12' controlId='formBasicEmail'>
-                            <Form.Label>Employee ID</Form.Label>
-                            <Form.Control
-                                name='employeeID'
-                                type='number'
-                                value={formData.employeeID}
-                                onChange={handleChange}
-                                placeholder='Enter your Employee ID'
-                                isInvalid={!!formErrors.employeeID}
-                            >
-                            </Form.Control>
-                            <Form.Control.Feedback type='invalid'>
-                                {formErrors.employeeID}
-                            </Form.Control.Feedback>
-                        </Form.Group>
+                            <Form.Group className='mb-3 col-lg-12' controlId='formBasicEmail'>
+                                <Form.Label>Employee ID</Form.Label>
+                                <Form.Control
+                                    name='employeeID'
+                                    type='number'
+                                    value={formData.employeeID}
+                                    onChange={handleChange}
+                                    placeholder='Enter your Employee ID'
+                                    isInvalid={!!formErrors.employeeID}
+                                >
+                                </Form.Control>
+                                <Form.Control.Feedback type='invalid'>
+                                    {formErrors.employeeID}
+                                </Form.Control.Feedback>
+                            </Form.Group>
 
                             <Form.Group className='mb-3 col-lg-12' controlId='formBasicEmail'>
                                 <Form.Label>Email address</Form.Label>

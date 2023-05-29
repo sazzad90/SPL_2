@@ -281,12 +281,20 @@ app.get('/fetchProfile/:email', (req, res) => {
       console.error(err);
     }
     else {
-      console.log('r: ', result);
-      const name = result[0].Name;
-      const email = result[0].Email;
-      const designation = result[0].UserType;
+      db.query("SELECT * from department where dep_id = ?", [result[0].dep_id], (err, result1) => {
+        if (err) {
+          console.error(err);
+        }
+        else {
+          console.log('r: ', result);
+          const name = result[0].Name;
+          const email = result[0].Email;
+          const department = result1[0].dep_name;
+          const designation = result[0].UserType;
 
-      res.send({ name, email, designation });
+          res.send({ name, email, department, designation });
+        }
+      })
 
     }
   })
@@ -445,25 +453,6 @@ app.post('/forwardEventNotice', (req, res) => {
 
 app.post('/forwardTeamlistNotice', (req, res) => {
 
-  //  db.query("SELECT MAX(noticeid) INTO @max_id FROM teamlistNotice",(err2,result1)=>{
-  //      //console.log("loop1");
-  //      if (err2) {
-  //          console.error(err2);
-  //          return res.status(500).send('An error occurred while fetching the maximum event ID');
-  //      }
-  //      db.query("SELECT * FROM teamlistNotice WHERE noticeid = @max_id", (err3, result) => {
-  //          if (err3) {
-  //              console.error(err3);
-  //              return res.status(500).send('An error occurred while fetching the latest event notice');
-  //          }
-  //          else{
-  //              const name = result[0].name;
-  //              const startingDate = result[0].startingDate;
-  //              const deadline = result[0].deadline;
-  //              res.send({ name, startingDate, deadline });
-  //          }
-  //      })
-  //  })
 
   db.query("SELECT MAX(notice_id) INTO @max_id FROM notice where type = 'teamlist'", (err2, result1) => {
     //console.log("loop1");
@@ -525,18 +514,6 @@ app.get('/eventNotice', (req, res) => {
 
 
 
-// remove post from title page
-// let showPost = true;
-// app.post('/removePost', (req, res) => {
-//     showPost = false;
-//     console.log(showPost);
-//   });
-
-//   app.get('/removePost', (req, res) => {
-//       res.send({ showPost });
-//       console.log(showPost)
-//     });
-
 //send event notice via mail
 app.post('/sendEventNotice', async (req, res) => {
 
@@ -595,50 +572,6 @@ app.post('/sendEventNotice', async (req, res) => {
 
   });
 });
-
-
-
-// app.post('/sendEventNotice', (req, res) => {
-//     db.query("SELECT MAX(eventid) INTO @max_id FROM eventnotice", (err, result) => {
-//         if (err) throw err;
-
-//         const maxId = result[0].max_id;
-
-//         db.query("SELECT * FROM eventnotice WHERE eventid = ?", [maxId], (err, result) => {
-//             if (err) throw err;
-
-//             const name = result[0].name;
-//             const startingDate = result[0].startingDate;
-//             const deadline = result[0].deadline;
-
-//             db.query("SELECT email FROM userdb", (err, results) => {
-//                 if (err) {
-//                     console.log(err);
-//                 } else {
-//                     results.forEach(result => {
-//                         const email = result.Email;
-
-//                         const msg = {
-//                             to: email,
-//                             from: 'bsse1207@iit.du.ac.bd',
-//                             subject: 'Team List Submission Notice',
-//                             html: `Greetings,<br><br>
-
-//                             There will be an Inter department <strong>${name}</strong> competition from <strong>${startingDate}</strong>. We are delighted to invite you to participate in this competition. You are requested to fill up the team list form before the deadline date <strong>${deadline}</strong><br><br>
-
-//                             Thanks,<br>
-//                             The Director<br>
-//                             Physical Education Center<br>
-//                             University of Dhaka`
-//                         };
-//                         sgMail.send(msg);
-//                     });
-//                     res.send("Emails sent successfully");
-//                 }
-//             });
-//         });
-//     });
-// });
 
 
 
@@ -754,8 +687,8 @@ app.post('/teamlistNoticeSubmit', (req, res) => {
 
 
 
-//generating group stage fixture 
-// app.post('/fixtureInfo', (req, res) =>{
+
+
 
 //     const startDate = req.body.startingDate;
 //     const startingDate = new Date(startDate);
@@ -1221,7 +1154,7 @@ app.post('/fixtureInfo', (req, res) => {
               let count = 0;
               currentDate = new Date(startDate);
               let matchTimes = [];
-              if (eventName.toLowerCase() === "football" || eventName.toLowerCase() === "volleyball" || eventName.toLowerCase() === "baksetball") {
+              if (eventName.toLowerCase() === "football" || eventName.toLowerCase() === "volleyball" || eventName.toLowerCase() === "basketball") {
                 matchTimes = ["09:00 am", "11:00 am", "03:00 pm", "05:00 pm"];
               }
               else if (eventName.toLowerCase() === "cricket") {
@@ -2443,7 +2376,7 @@ app.post('/notifyDepartments/:eventName', async (req, res) => {
   const currentYear = currentDate.getFullYear().toString();
   console.log(eventName, currentYear);
 
-  const title = 'Player verification Issue ' + eventName;
+  const title = 'Player verification Issue: ' + eventName;
   const body = 'Your submitted playerlist has unregistered players. Please submit a proper playerlist to participate in the competition. Thanks'
   const notification = [{ id: insertCount, title, body }];
   insertCount++;
